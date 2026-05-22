@@ -251,7 +251,16 @@ nav a.active { background: var(--gradient-1); color: white; }
   color: var(--cyber-blue); font-weight: 600; margin-bottom: 6px;
 }
 .product-name { font-weight: 600; font-size: 0.95rem; margin-bottom: 10px; line-height: 1.35; }
-.product-bottom { display: flex; justify-content: space-between; align-items: center; }
+.product-rating {
+  display: flex; align-items: center; gap: 4px;
+  font-size: 0.85rem; color: var(--neon-pink);
+}
+.product-views {
+  font-size: 0.8rem; color: var(--text-muted);
+}
+.product-bottom {
+  display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 6px;
+}
 .product-price {
   font-size: 1.1rem; font-weight: 700;
   background: var(--gradient-1); -webkit-background-clip: text; -webkit-text-fill-color: transparent;
@@ -639,6 +648,7 @@ function renderCard(p, i) {
         <div class="product-bottom">
           <span class="product-price">${p.price}</span>
           ${favCount > 0 ? `<span class="product-rating">♥ ${favCount}</span>` : ''}
+          ${p.views > 0 ? `<span class="product-views">👁 ${p.views}</span>` : ''}
         </div>
       </div>
     </a>
