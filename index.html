@@ -1,0 +1,731 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>demosaii ink — Prints, Apparel & Digital Goods</title>
+<link href="https://fonts.googleapis.com/css2?family=Dela+Gothic+One&family=Outfit:wght@300;400;500;600;700&family=Noto+Sans+KR:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --neon-pink: #FF2D87;
+  --electric-purple: #A855F7;
+  --cyber-blue: #06B6D4;
+  --lime-pop: #84CC16;
+  --golden-amber: #F59E0B;
+  --hot-coral: #FF6B6B;
+  --deep-black: #0A0A0F;
+  --card-bg: #141420;
+  --card-hover: #1C1C2E;
+  --surface: #111118;
+  --text-primary: #F8F8FF;
+  --text-secondary: #9CA3AF;
+  --text-muted: #6B7280;
+  --gradient-1: linear-gradient(135deg, var(--neon-pink), var(--electric-purple));
+  --gradient-2: linear-gradient(135deg, var(--cyber-blue), var(--lime-pop));
+  --gradient-3: linear-gradient(135deg, var(--golden-amber), var(--hot-coral));
+  --radius: 16px;
+  --radius-sm: 10px;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'Outfit', sans-serif;
+  background: var(--deep-black);
+  color: var(--text-primary);
+  overflow-x: hidden;
+  min-height: 100vh;
+}
+
+/* ===== ANIMATED BACKGROUND ===== */
+.bg-glow {
+  position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+  z-index: 0; pointer-events: none; overflow: hidden;
+}
+.bg-glow::before, .bg-glow::after {
+  content: ''; position: absolute; border-radius: 50%;
+  filter: blur(120px); opacity: 0.15;
+  animation: floatBlob 20s ease-in-out infinite;
+}
+.bg-glow::before { width: 600px; height: 600px; background: var(--neon-pink); top: -200px; left: -100px; }
+.bg-glow::after { width: 500px; height: 500px; background: var(--cyber-blue); bottom: -200px; right: -100px; animation-delay: -10s; animation-direction: reverse; }
+@keyframes floatBlob {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33% { transform: translate(100px, 50px) scale(1.1); }
+  66% { transform: translate(-50px, -30px) scale(0.95); }
+}
+
+.noise {
+  position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+  z-index: 1; pointer-events: none; opacity: 0.03;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+.container { max-width: 1280px; margin: 0 auto; padding: 0 24px; position: relative; z-index: 2; }
+
+/* ===== HEADER ===== */
+header {
+  padding: 20px 0; position: sticky; top: 0; z-index: 100;
+  background: rgba(10, 10, 15, 0.8); backdrop-filter: blur(20px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+.header-inner { display: flex; align-items: center; justify-content: space-between; gap: 24px; }
+.logo {
+  font-family: 'Dela Gothic One', cursive; font-size: 1.6rem;
+  background: var(--gradient-1); -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  letter-spacing: -0.5px; white-space: nowrap; text-decoration: none;
+}
+nav { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+nav a {
+  color: var(--text-secondary); text-decoration: none; font-size: 0.9rem;
+  font-weight: 500; padding: 8px 16px; border-radius: 99px; transition: all 0.3s;
+}
+nav a:hover, nav a.active { color: var(--text-primary); background: rgba(255, 255, 255, 0.08); }
+nav a.active { background: var(--gradient-1); color: white; }
+
+.header-right { display: flex; align-items: center; gap: 12px; }
+.search-box {
+  display: flex; align-items: center; gap: 8px;
+  background: rgba(255,255,255,0.06); border-radius: 99px;
+  padding: 8px 16px; border: 1px solid rgba(255,255,255,0.08);
+  transition: all 0.3s;
+}
+.search-box:focus-within { border-color: var(--neon-pink); background: rgba(255,255,255,0.1); }
+.search-box input {
+  background: none; border: none; outline: none; color: var(--text-primary);
+  font-family: 'Outfit', sans-serif; font-size: 0.85rem; width: 160px;
+}
+.search-box input::placeholder { color: var(--text-muted); }
+
+.menu-toggle {
+  display: none; background: none; border: none;
+  color: var(--text-primary); font-size: 1.5rem; cursor: pointer; padding: 8px;
+}
+
+/* ===== HERO ===== */
+.hero { padding: 80px 0 60px; text-align: center; position: relative; }
+.floaters { position: absolute; top: 0; left: 0; right: 0; bottom: 0; pointer-events: none; overflow: hidden; }
+.floater { position: absolute; font-size: 2rem; opacity: 0.15; animation: float 6s ease-in-out infinite; }
+.floater:nth-child(1) { top: 15%; left: 8%; animation-delay: 0s; }
+.floater:nth-child(2) { top: 25%; right: 10%; animation-delay: -2s; }
+.floater:nth-child(3) { bottom: 20%; left: 12%; animation-delay: -4s; }
+.floater:nth-child(4) { bottom: 30%; right: 8%; animation-delay: -1s; }
+.floater:nth-child(5) { top: 50%; left: 5%; animation-delay: -3s; }
+@keyframes float {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50% { transform: translateY(-20px) rotate(10deg); }
+}
+.hero-badge {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: rgba(255, 45, 135, 0.1); border: 1px solid rgba(255, 45, 135, 0.3);
+  padding: 8px 20px; border-radius: 99px; font-size: 0.85rem;
+  font-weight: 500; color: var(--neon-pink); margin-bottom: 24px;
+  animation: fadeInUp 0.8s ease;
+}
+.hero h1 {
+  font-family: 'Dela Gothic One', cursive; font-size: clamp(2.5rem, 6vw, 4.5rem);
+  line-height: 1.1; margin-bottom: 20px; animation: fadeInUp 0.8s ease 0.1s both;
+}
+.hero h1 .gradient-text { background: var(--gradient-1); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+.hero p {
+  font-size: 1.15rem; color: var(--text-secondary); max-width: 550px;
+  margin: 0 auto 36px; line-height: 1.6; animation: fadeInUp 0.8s ease 0.2s both;
+}
+.hero-cta { display: inline-flex; gap: 16px; animation: fadeInUp 0.8s ease 0.3s both; flex-wrap: wrap; justify-content: center; }
+.btn {
+  display: inline-flex; align-items: center; gap: 8px; padding: 14px 32px;
+  border-radius: 99px; font-family: 'Outfit', sans-serif; font-size: 0.95rem;
+  font-weight: 600; text-decoration: none; cursor: pointer; border: none; transition: all 0.3s;
+}
+.btn-primary { background: var(--gradient-1); color: white; box-shadow: 0 4px 24px rgba(255, 45, 135, 0.3); }
+.btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 32px rgba(255, 45, 135, 0.4); }
+.btn-outline { background: transparent; color: var(--text-primary); border: 1.5px solid rgba(255, 255, 255, 0.2); }
+.btn-outline:hover { border-color: rgba(255, 255, 255, 0.5); background: rgba(255, 255, 255, 0.05); }
+
+/* ===== MARQUEE ===== */
+.marquee-wrap {
+  overflow: hidden; padding: 20px 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  margin-bottom: 60px;
+}
+.marquee { display: flex; gap: 48px; animation: scroll 25s linear infinite; width: max-content; }
+.marquee span { font-family: 'Dela Gothic One', cursive; font-size: 0.85rem; color: var(--text-muted); white-space: nowrap; text-transform: uppercase; letter-spacing: 3px; }
+.marquee .dot { color: var(--neon-pink); }
+@keyframes scroll { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+
+/* ===== SECTION STYLES ===== */
+.shop-section { padding-bottom: 60px; }
+.section-header {
+  display: flex; justify-content: space-between; align-items: baseline;
+  margin-bottom: 28px; flex-wrap: wrap; gap: 12px;
+}
+.section-header h2 { font-family: 'Dela Gothic One', cursive; font-size: 1.6rem; }
+.section-header h2 .accent { color: var(--neon-pink); }
+.section-header .count { color: var(--text-muted); font-size: 0.85rem; }
+.section-divider {
+  height: 1px; background: linear-gradient(90deg, transparent, rgba(255,45,135,0.3), transparent);
+  margin: 20px 0 60px;
+}
+
+/* ===== PRODUCT GRID ===== */
+.product-grid {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 24px;
+}
+.product-card {
+  background: var(--card-bg); border-radius: var(--radius); overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); cursor: pointer; position: relative;
+}
+.product-card:hover {
+  transform: translateY(-6px); border-color: rgba(255, 45, 135, 0.3);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5), 0 0 40px rgba(255, 45, 135, 0.08);
+}
+.product-img {
+  width: 100%; aspect-ratio: 1; background-size: cover; background-position: center;
+  position: relative; overflow: hidden;
+}
+.product-img::after {
+  content: ''; position: absolute; inset: 0;
+  background: linear-gradient(to top, rgba(10, 10, 15, 0.5) 0%, transparent 40%);
+}
+.product-tag {
+  position: absolute; top: 12px; left: 12px; padding: 5px 12px;
+  border-radius: 99px; font-size: 0.7rem; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 1px; z-index: 2;
+}
+.tag-new { background: var(--neon-pink); color: white; }
+.tag-best { background: var(--golden-amber); color: var(--deep-black); }
+.tag-digital { background: var(--cyber-blue); color: var(--deep-black); }
+.tag-video { background: var(--electric-purple); color: white; }
+
+.type-badges {
+  position: absolute; bottom: 12px; left: 12px; display: flex; gap: 6px; z-index: 2;
+}
+.type-badge {
+  padding: 3px 10px; border-radius: 6px; font-size: 0.65rem; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 0.5px; backdrop-filter: blur(8px);
+}
+.type-badge.digital { background: rgba(6,182,212,0.85); color: white; }
+.type-badge.video { background: rgba(168,85,247,0.85); color: white; }
+
+.quick-actions {
+  position: absolute; bottom: 12px; right: 12px; display: flex; gap: 8px; z-index: 2;
+  opacity: 0; transform: translateY(10px); transition: all 0.3s;
+}
+.product-card:hover .quick-actions { opacity: 1; transform: translateY(0); }
+.quick-btn {
+  width: 38px; height: 38px; border-radius: 50%;
+  background: rgba(255, 255, 255, 0.9); border: none; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.95rem; transition: all 0.2s; color: var(--deep-black);
+}
+.quick-btn:hover { background: var(--neon-pink); color: white; transform: scale(1.1); }
+
+.product-info { padding: 18px; }
+.product-category {
+  font-size: 0.7rem; text-transform: uppercase; letter-spacing: 1.5px;
+  color: var(--cyber-blue); font-weight: 600; margin-bottom: 6px;
+}
+.product-name { font-weight: 600; font-size: 0.95rem; margin-bottom: 10px; line-height: 1.35; }
+.product-bottom { display: flex; justify-content: space-between; align-items: center; }
+.product-price {
+  font-size: 1.1rem; font-weight: 700;
+  background: var(--gradient-1); -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+}
+.product-price-range { font-size: 0.95rem; font-weight: 600; color: var(--neon-pink); }
+.product-stock { font-size: 0.75rem; color: var(--text-muted); }
+
+/* ===== FEATURED BANNER ===== */
+.featured-banner {
+  background: var(--gradient-1); border-radius: var(--radius); padding: 48px;
+  margin-bottom: 60px; display: flex; align-items: center; justify-content: space-between;
+  gap: 32px; position: relative; overflow: hidden; flex-wrap: wrap;
+}
+.featured-banner::before {
+  content: ''; position: absolute; top: -50%; right: -20%;
+  width: 400px; height: 400px; background: rgba(255, 255, 255, 0.1); border-radius: 50%;
+}
+.featured-text { position: relative; z-index: 2; flex: 1; min-width: 280px; }
+.featured-text h3 { font-family: 'Dela Gothic One', cursive; font-size: clamp(1.5rem, 3vw, 2rem); margin-bottom: 12px; }
+.featured-text p { opacity: 0.9; margin-bottom: 24px; line-height: 1.6; }
+.btn-white { background: white; color: var(--deep-black); font-weight: 700; }
+.btn-white:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3); }
+
+/* ===== SOCIAL ===== */
+.social-strip { display: flex; justify-content: center; gap: 16px; padding: 40px 0; flex-wrap: wrap; }
+.social-link {
+  display: flex; align-items: center; gap: 8px; padding: 12px 24px;
+  border-radius: 99px; background: var(--card-bg);
+  border: 1px solid rgba(255, 255, 255, 0.08); color: var(--text-secondary);
+  text-decoration: none; font-size: 0.9rem; font-weight: 500; transition: all 0.3s;
+}
+.social-link:hover { border-color: var(--neon-pink); color: var(--text-primary); transform: translateY(-2px); }
+.social-icon { font-size: 1.2rem; }
+
+/* ===== FOOTER ===== */
+footer { border-top: 1px solid rgba(255, 255, 255, 0.05); padding: 48px 0 32px; }
+.footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 48px; margin-bottom: 40px; }
+.footer-brand .logo { font-size: 1.3rem; display: inline-block; margin-bottom: 12px; }
+.footer-brand p { color: var(--text-muted); font-size: 0.9rem; line-height: 1.6; }
+.footer-col h4 { font-size: 0.8rem; text-transform: uppercase; letter-spacing: 2px; color: var(--text-muted); margin-bottom: 16px; }
+.footer-col a { display: block; color: var(--text-secondary); text-decoration: none; font-size: 0.9rem; padding: 6px 0; transition: color 0.3s; }
+.footer-col a:hover { color: var(--text-primary); }
+.footer-bottom { text-align: center; color: var(--text-muted); font-size: 0.8rem; padding-top: 24px; border-top: 1px solid rgba(255, 255, 255, 0.05); }
+
+/* ===== SCROLL NAV ===== */
+.scroll-nav {
+  display: flex; justify-content: center; gap: 10px; margin-bottom: 48px; flex-wrap: wrap;
+}
+.scroll-nav a {
+  padding: 10px 22px; border-radius: 99px;
+  border: 1.5px solid rgba(255, 255, 255, 0.1); background: transparent;
+  color: var(--text-secondary); font-family: 'Outfit', sans-serif;
+  font-size: 0.88rem; font-weight: 500; cursor: pointer;
+  transition: all 0.3s; text-decoration: none;
+}
+.scroll-nav a:hover { border-color: rgba(255, 255, 255, 0.3); color: var(--text-primary); }
+
+/* ===== ANIMATIONS ===== */
+@keyframes fadeInUp { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: translateY(0); } }
+.fade-in { opacity: 0; transform: translateY(24px); animation: fadeInUp 0.6s ease forwards; }
+.fade-in:nth-child(1) { animation-delay: 0.05s; }
+.fade-in:nth-child(2) { animation-delay: 0.1s; }
+.fade-in:nth-child(3) { animation-delay: 0.15s; }
+.fade-in:nth-child(4) { animation-delay: 0.2s; }
+.fade-in:nth-child(5) { animation-delay: 0.25s; }
+.fade-in:nth-child(6) { animation-delay: 0.3s; }
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 768px) {
+  .menu-toggle { display: block; }
+  nav {
+    display: none; position: absolute; top: 100%; left: 0; right: 0;
+    background: rgba(10, 10, 15, 0.95); backdrop-filter: blur(20px);
+    flex-direction: column; padding: 16px 24px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  }
+  nav.open { display: flex; }
+  nav a { width: 100%; text-align: center; padding: 12px; }
+  .footer-grid { grid-template-columns: 1fr 1fr; gap: 32px; }
+  .featured-banner { padding: 32px; text-align: center; justify-content: center; }
+  .product-grid { grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 16px; }
+  .search-box { display: none; }
+  .header-right .search-box { display: none; }
+}
+@media (max-width: 480px) {
+  .footer-grid { grid-template-columns: 1fr; }
+  .product-grid { grid-template-columns: 1fr 1fr; gap: 12px; }
+  .product-info { padding: 12px; }
+  .product-name { font-size: 0.85rem; }
+}
+</style>
+</head>
+<body>
+<div class="bg-glow"></div>
+<div class="noise"></div>
+
+<!-- HEADER -->
+<header>
+  <div class="container header-inner">
+    <a href="#" class="logo">demosaii ink</a>
+    <button class="menu-toggle" onclick="document.querySelector('nav').classList.toggle('open')">☰</button>
+    <nav>
+      <a href="#" class="active">Shop</a>
+      <a href="#bts-shirts">BTS Shirts</a>
+      <a href="#bts-prints">BTS Prints</a>
+      <a href="#prints">Prints</a>
+      <a href="#digital">Digital</a>
+      <a href="#about">About</a>
+    </nav>
+    <div class="header-right">
+      <div class="search-box">
+        <span>🔍</span>
+        <input type="text" placeholder="Search products..." id="searchInput" oninput="handleSearch(this.value)">
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="floaters">
+    <span class="floater">🎨</span>
+    <span class="floater">💜</span>
+    <span class="floater">🖼️</span>
+    <span class="floater">✨</span>
+    <span class="floater">🎵</span>
+  </div>
+  <div class="container">
+    <div class="hero-badge">✦ New Drops Available</div>
+    <h1>Prints That Hit <br><span class="gradient-text">Different</span></h1>
+    <p>Original K-pop inspired prints, fan apparel, digital goods, and more. Made with love and a whole lot of purple.</p>
+    <div class="hero-cta">
+      <a href="#bts-shirts" class="btn btn-primary">Browse Shop →</a>
+      <a href="#about" class="btn btn-outline">About the Creator</a>
+    </div>
+  </div>
+</section>
+
+<!-- MARQUEE -->
+<div class="marquee-wrap">
+  <div class="marquee">
+    <span>Prints</span><span class="dot">♦</span>
+    <span>T-Shirts</span><span class="dot">♦</span>
+    <span>K-Pop Fan Merch</span><span class="dot">♦</span>
+    <span>eBooks</span><span class="dot">♦</span>
+    <span>Digital Downloads</span><span class="dot">♦</span>
+    <span>Korean Aesthetic</span><span class="dot">♦</span>
+    <span>Coloring Books</span><span class="dot">♦</span>
+    <span>Planners</span><span class="dot">♦</span>
+    <span>Prints</span><span class="dot">♦</span>
+    <span>T-Shirts</span><span class="dot">♦</span>
+    <span>K-Pop Fan Merch</span><span class="dot">♦</span>
+    <span>eBooks</span><span class="dot">♦</span>
+    <span>Digital Downloads</span><span class="dot">♦</span>
+    <span>Korean Aesthetic</span><span class="dot">♦</span>
+    <span>Coloring Books</span><span class="dot">♦</span>
+    <span>Planners</span><span class="dot">♦</span>
+  </div>
+</div>
+
+<!-- QUICK NAV -->
+<div class="container">
+  <div class="scroll-nav">
+    <a href="#bts-shirts">💜 BTS Shirts</a>
+    <a href="#bts-prints">🖼️ BTS Prints</a>
+    <a href="#prints">🌸 Prints</a>
+    <a href="#ebooks">📖 eBooks & Guides</a>
+    <a href="#digital">⬇️ Digital Products</a>
+  </div>
+</div>
+
+<!-- SEARCH RESULTS (hidden by default) -->
+<section class="shop-section container" id="search-results" style="display:none;">
+  <div class="section-header">
+    <h2>Search Results</h2>
+    <span class="count" id="search-count"></span>
+  </div>
+  <div class="product-grid" id="search-grid"></div>
+  <div class="section-divider"></div>
+</section>
+
+<!-- BTS SHIRTS -->
+<section class="shop-section container" id="bts-shirts">
+  <div class="section-header">
+    <h2>💜 BTS <span class="accent">Shirts</span></h2>
+  </div>
+  <div class="product-grid" id="grid-bts-shirts"></div>
+  <div class="section-divider"></div>
+</section>
+
+<!-- BTS PRINTS -->
+<section class="shop-section container" id="bts-prints">
+  <div class="section-header">
+    <h2>🖼️ BTS <span class="accent">Prints</span></h2>
+  </div>
+  <div class="product-grid" id="grid-bts-prints"></div>
+  <div class="section-divider"></div>
+</section>
+
+<!-- OTHER PRINTS -->
+<section class="shop-section container" id="prints">
+  <div class="section-header">
+    <h2>🌸 <span class="accent">Prints</span> Collection</h2>
+  </div>
+  <div class="product-grid" id="grid-prints"></div>
+  <div class="section-divider"></div>
+</section>
+
+<!-- FEATURED BANNER -->
+<section class="container">
+  <div class="featured-banner">
+    <div class="featured-text">
+      <h3>72 Hours — The Animated Short</h3>
+      <p>A story about memory, loss, and choosing to remember. Explore the exclusive behind-the-scenes collection and soundtrack.</p>
+      <a href="#" class="btn btn-white">Explore →</a>
+    </div>
+  </div>
+</section>
+
+<!-- EBOOKS -->
+<section class="shop-section container" id="ebooks" style="padding-top: 40px;">
+  <div class="section-header">
+    <h2>📖 eBooks & <span class="accent">Guides</span></h2>
+  </div>
+  <div class="product-grid" id="grid-ebooks"></div>
+  <div class="section-divider"></div>
+</section>
+
+<!-- DIGITAL PRODUCTS -->
+<section class="shop-section container" id="digital">
+  <div class="section-header">
+    <h2>⬇️ Digital <span class="accent">Products</span></h2>
+  </div>
+  <div class="product-grid" id="grid-digital"></div>
+</section>
+
+<!-- SOCIAL -->
+<section class="container">
+  <div class="social-strip">
+    <a href="https://instagram.com/demosaii" class="social-link" target="_blank">
+      <span class="social-icon">📸</span> Instagram
+    </a>
+    <a href="https://tiktok.com/@demosaii" class="social-link" target="_blank">
+      <span class="social-icon">🎵</span> TikTok
+    </a>
+    <a href="https://open.spotify.com" class="social-link" target="_blank">
+      <span class="social-icon">🎧</span> Spotify
+    </a>
+    <a href="https://soundcloud.com/demosaii" class="social-link" target="_blank">
+      <span class="social-icon">☁️</span> SoundCloud
+    </a>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <a href="#" class="logo">demosaii ink</a>
+        <p>Original prints, fan apparel, and digital goods. Every piece is made with intention, color, and heart.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Shop</h4>
+        <a href="#bts-shirts">BTS Shirts</a>
+        <a href="#bts-prints">BTS Prints</a>
+        <a href="#prints">Prints</a>
+        <a href="#ebooks">eBooks</a>
+        <a href="#digital">Digital Products</a>
+      </div>
+      <div class="footer-col">
+        <h4>Info</h4>
+        <a href="#">About</a>
+        <a href="#">Shipping</a>
+        <a href="#">Returns</a>
+        <a href="#">Contact</a>
+      </div>
+      <div class="footer-col">
+        <h4>Connect</h4>
+        <a href="https://instagram.com/demosaii" target="_blank">Instagram</a>
+        <a href="https://tiktok.com/@demosaii" target="_blank">TikTok</a>
+        <a href="https://soundcloud.com/demosaii" target="_blank">SoundCloud</a>
+        <a href="https://github.com/DemosLady" target="_blank">GitHub</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      © 2026 demosaii ink. All rights reserved. 보라해 💜
+    </div>
+  </div>
+</footer>
+
+<script>
+// ===== PRODUCT DATA (from actual Etsy listings) =====
+const products = [
+  // BTS SHIRTS
+  {
+    name: "Kpop Fan T-Shirt: Come On Wing!",
+    section: "bts-shirts",
+    price: "$25.40 – $35.21",
+    types: ["video"],
+    tag: null,
+    gradient: "linear-gradient(135deg, #1a1a3e, #3b1f6e, #d946ef, #fbbf24)"
+  },
+  {
+    name: "You Call I Run – K-Pop Fan Comic Graphic Tee",
+    section: "bts-shirts",
+    price: "$30.27 – $38.53",
+    types: ["video"],
+    tag: "best",
+    gradient: "linear-gradient(135deg, #0f172a, #7c3aed, #f472b6, #fde68a)"
+  },
+  {
+    name: "Had Your Little Fun, Fella? Kpop Fan Tee",
+    section: "bts-shirts",
+    price: "$25.40 – $35.21",
+    types: ["video"],
+    tag: null,
+    gradient: "linear-gradient(135deg, #18181b, #dc2626, #fbbf24, #1e1b4b)"
+  },
+  {
+    name: "Come On Wing! Kpop Fan T-Shirt Set",
+    section: "bts-shirts",
+    price: "$25.40 – $35.21",
+    types: ["video"],
+    tag: null,
+    gradient: "linear-gradient(135deg, #1e3a5f, #06b6d4, #a78bfa, #f0abfc)"
+  },
+  {
+    name: "Mucho Picante Kpop Idol Fan T-Shirt",
+    section: "bts-shirts",
+    price: "$25.40 – $31.56",
+    types: [],
+    tag: "new",
+    gradient: "linear-gradient(135deg, #451a03, #ea580c, #fbbf24, #292524)"
+  },
+  {
+    name: "Mucho Picante Kpop Idol Fan T-Shirt (Alt)",
+    section: "bts-shirts",
+    price: "$30.99 – $35.99",
+    types: [],
+    tag: null,
+    gradient: "linear-gradient(135deg, #1c1917, #b91c1c, #f97316, #fef3c7)"
+  },
+  // BTS PRINTS
+  {
+    name: "Asian Male Singer Stage Concert Print",
+    section: "bts-prints",
+    price: "$37.10 – $83.60",
+    types: ["video"],
+    tag: "best",
+    gradient: "linear-gradient(135deg, #0c0a1d, #312e81, #7c3aed, #c084fc, #f9a8d4)"
+  },
+  {
+    name: "Concert Wall Prints | Ink Oil Brushwork",
+    section: "bts-prints",
+    price: "$9.99",
+    types: ["digital", "video"],
+    tag: null,
+    gradient: "linear-gradient(135deg, #1e1b4b, #4338ca, #818cf8, #e0e7ff)"
+  },
+  // OTHER PRINTS
+  {
+    name: "Korean Ink and Gold Set – Tiger Bamboo",
+    section: "prints",
+    price: "$19.00",
+    types: ["digital", "video"],
+    tag: null,
+    gradient: "linear-gradient(135deg, #292524, #78716c, #d4a843, #fef3c7)"
+  },
+  {
+    name: "Korean Garden Botanical Print Set",
+    section: "prints",
+    price: "$19.00",
+    types: ["digital", "video"],
+    tag: null,
+    gradient: "linear-gradient(135deg, #1a2e1a, #4ade80, #a3e635, #fefce8)"
+  },
+  {
+    name: "Pastel Korean Botanicals Print Set",
+    section: "prints",
+    price: "$12.99",
+    types: ["digital", "video"],
+    tag: "new",
+    gradient: "linear-gradient(135deg, #fdf2f8, #f9a8d4, #c084fc, #e9d5ff)"
+  },
+  {
+    name: "Korean Spirit Animal – Digital Print Set",
+    section: "prints",
+    price: "$19.00",
+    types: ["digital", "video"],
+    tag: null,
+    gradient: "linear-gradient(135deg, #1c1917, #44403c, #92400e, #fbbf24)"
+  },
+  {
+    name: "Korean Ink Wash Landscape Prints",
+    section: "prints",
+    price: "$19.99",
+    types: ["digital", "video"],
+    tag: null,
+    gradient: "linear-gradient(135deg, #f5f5f4, #a8a29e, #57534e, #1c1917)"
+  },
+  // EBOOKS & GUIDES
+  {
+    name: "Quiet Ambition – Guided Journal for Introverts",
+    section: "ebooks",
+    price: "$9.99",
+    types: ["digital", "video"],
+    tag: "new",
+    gradient: "linear-gradient(135deg, #1e293b, #334155, #64748b, #e2e8f0)"
+  },
+  {
+    name: "AI Music Production Guide for Beginners",
+    section: "ebooks",
+    price: "$5.49",
+    types: ["digital"],
+    tag: null,
+    gradient: "linear-gradient(135deg, #0f172a, #1e40af, #3b82f6, #93c5fd)"
+  },
+  {
+    name: "Joseon Dynasty Coloring Book, Historical Edition",
+    section: "ebooks",
+    price: "$11.00",
+    types: ["digital", "video"],
+    tag: null,
+    gradient: "linear-gradient(135deg, #451a03, #92400e, #d4a843, #fef3c7)"
+  },
+  // DIGITAL PRODUCTS
+  {
+    name: "BTS ARMY Wedding Planner Spreadsheet",
+    section: "digital",
+    price: "$9.99",
+    types: ["digital"],
+    tag: "new",
+    gradient: "linear-gradient(135deg, #4c1d95, #7c3aed, #c084fc, #fce7f3, #fbbf24)"
+  }
+];
+
+function renderCard(p, i) {
+  const tagHTML = p.tag ? `<span class="product-tag tag-${p.tag}">${p.tag}</span>` : '';
+  const typeBadges = p.types.map(t => `<span class="type-badge ${t}">${t}</span>`).join('');
+  const isRange = p.price.includes('–');
+
+  return `
+    <div class="product-card fade-in" style="animation-delay: ${i * 0.05}s">
+      <div class="product-img" style="background: ${p.gradient};">
+        ${tagHTML}
+        ${typeBadges ? `<div class="type-badges">${typeBadges}</div>` : ''}
+        <div class="quick-actions">
+          <button class="quick-btn" title="View on Etsy">🛒</button>
+        </div>
+      </div>
+      <div class="product-info">
+        <div class="product-name">${p.name}</div>
+        <div class="product-bottom">
+          ${isRange
+            ? `<span class="product-price-range">${p.price}</span>`
+            : `<span class="product-price">${p.price}</span>`
+          }
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+function renderSection(sectionId) {
+  const grid = document.getElementById('grid-' + sectionId);
+  const items = products.filter(p => p.section === sectionId);
+  grid.innerHTML = items.map((p, i) => renderCard(p, i)).join('');
+}
+
+// Search
+function handleSearch(query) {
+  const resultsSection = document.getElementById('search-results');
+  const searchGrid = document.getElementById('search-grid');
+  const searchCount = document.getElementById('search-count');
+
+  if (!query.trim()) {
+    resultsSection.style.display = 'none';
+    document.querySelectorAll('.shop-section:not(#search-results)').forEach(s => s.style.display = '');
+    return;
+  }
+
+  const q = query.toLowerCase();
+  const matches = products.filter(p => p.name.toLowerCase().includes(q) || p.section.includes(q));
+
+  searchGrid.innerHTML = matches.length
+    ? matches.map((p, i) => renderCard(p, i)).join('')
+    : '<p style="color: var(--text-muted); grid-column: 1/-1; text-align: center; padding: 40px;">No products found for "' + query + '"</p>';
+  searchCount.textContent = matches.length + ' result' + (matches.length !== 1 ? 's' : '');
+
+  resultsSection.style.display = 'block';
+  document.querySelectorAll('.shop-section:not(#search-results)').forEach(s => s.style.display = 'none');
+}
+
+// Initial render
+['bts-shirts', 'bts-prints', 'prints', 'ebooks', 'digital'].forEach(renderSection);
+</script>
+</body>
+</html>
