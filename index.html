@@ -288,6 +288,22 @@ footer { border-top: 1px solid rgba(255, 255, 255, 0.05); padding: 48px 0 32px; 
 }
 .scroll-nav a:hover { border-color: rgba(255, 255, 255, 0.3); color: var(--text-primary); }
 
+/* ===== NEW ARRIVALS PREVIEW ===== */
+.new-arrivals-preview {
+  display: flex; gap: 12px; z-index: 2; flex-shrink: 0;
+}
+.new-arrival-thumb {
+  width: 100px; height: 100px; border-radius: 12px;
+  background-size: cover; background-position: center;
+  border: 2px solid rgba(255,255,255,0.3);
+  transition: all 0.3s; cursor: pointer;
+}
+.new-arrival-thumb:hover { transform: scale(1.1); border-color: white; }
+
+@media (max-width: 768px) {
+  .new-arrivals-preview { display: none; }
+}
+
 /* ===== MINI APPS ===== */
 .apps-grid {
   display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 16px;
@@ -459,14 +475,15 @@ footer { border-top: 1px solid rgba(255, 255, 255, 0.05); padding: 48px 0 32px; 
   <div class="section-divider"></div>
 </section>
 
-<!-- FEATURED BANNER -->
+<!-- NEW ARRIVALS BANNER -->
 <section class="container">
   <div class="featured-banner">
     <div class="featured-text">
-      <h3>72 Hours — The Animated Short</h3>
-      <p>A story about memory, loss, and choosing to remember. Explore the exclusive behind-the-scenes collection and soundtrack.</p>
-      <a href="#" class="btn btn-white">Explore →</a>
+      <h3>✦ New Arrivals</h3>
+      <p>Fresh drops just landed in the shop. Check out the latest prints, apparel, and digital goods.</p>
+      <a href="#" class="btn btn-white" onclick="window.scrollTo({top:0,behavior:'smooth'});return false;">Shop New →</a>
     </div>
+    <div class="new-arrivals-preview" id="new-arrivals-preview"></div>
   </div>
 </section>
 
@@ -651,6 +668,16 @@ function handleSearch(query) {
 
 function renderAll() {
   ['bts-shirts', 'bts-prints', 'prints', 'ebooks', 'digital'].forEach(renderSection);
+
+  // New Arrivals preview — show 4 latest products with images
+  const preview = document.getElementById('new-arrivals-preview');
+  if (preview) {
+    const withImages = products.filter(p => p.image);
+    const latest = withImages.slice(0, 4);
+    preview.innerHTML = latest.map(p =>
+      `<a href="${p.etsy_url || '#'}" target="_blank" class="new-arrival-thumb" style="background-image: url('${p.image}')" title="${p.name}"></a>`
+    ).join('');
+  }
 }
 
 // Load products from JSON file, fall back to empty
