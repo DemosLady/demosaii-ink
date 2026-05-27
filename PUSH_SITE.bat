@@ -8,7 +8,7 @@ echo.
 
 set REPO_NAME=demosaii-ink
 set REPO_URL=https://github.com/DemosLady/%REPO_NAME%.git
-set SITE_FOLDER=D:\AI\CODE\learning-curve-auto\demosaii-ink
+set SITE_FOLDER=D:\AI\CODE\learning-curve-auto\sites\demosaii-ink
 
 :: Check if folder exists
 if not exist "%SITE_FOLDER%" (
