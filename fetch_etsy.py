@@ -192,8 +192,8 @@ def build_products_json(listings, images_map):
         }
         products.append(product)
 
-    # Sort: most favorites first within each section
-    products.sort(key=lambda p: (-p["favorites"], p["section"]))
+    # Sort: newest first within each section (higher ID = newer listing)
+    products.sort(key=lambda p: (p["section"], -p["id"]))
 
     return products
 
